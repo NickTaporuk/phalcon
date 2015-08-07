@@ -2,31 +2,38 @@
 
 try {
 
-// Register an autoloader
-$loader = new \Phalcon\Loader();
-$loader->registerDirs(array(
-'../app/controllers/',
-'../app/models/'
-))->register();
+    // Регистрация автозагрузчика
+    $loader = new \Phalcon\Loader();
+    $loader->registerDirs(array(
+        '../app/controllers/',
+        '../app/models/'
+    ))->register();
 
-// Create a DI
-$di = new Phalcon\DI\FactoryDefault();
+    // Создание DI
+    $di = new Phalcon\DI\FactoryDefault();
 
-// Setting up the view component
-$di->set('view', function () {
-$view = new \Phalcon\Mvc\View();
-$view->setViewsDir('../app/views/');
-return $view;
-});
+    // Настраиваем сервис для работы с БД
+    $di->set('db', function () {
+        return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
+            "host" => "localhost",
+            "username" => "root",
+            "password" => "root",
+            "dbname" => "phalcon"
+        ));
+    });
 
-// Handle the request
-$application = new \Phalcon\Mvc\Application($di);
+    // Настраиваем компонент View
+    $di->set('view', function () {
+        $view = new \Phalcon\Mvc\View();
+        $view->setViewsDir('../app/views/');
+        return $view;
+    });
 
-echo $application->handle()->getContent();
+    // Обработка запроса
+    $application = new \Phalcon\Mvc\Application($di);
 
-} catch (\Phalcon\Exception $e) {
-echo "PhalconException: ", $e->getMessage();
+    echo $application->handle()->getContent();
+
+} catch (Exception $e) {
+    echo "PhalconException: ", $e->getMessage();
 }
-
-// Создание DI
-$di = new Phalcon\DI\FactoryDefault();
