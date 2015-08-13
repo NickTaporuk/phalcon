@@ -1,6 +1,5 @@
 <?php
 
-<<<<<<< HEAD
 error_reporting(E_ALL);
 
 define('APP_PATH', realpath('..'));
@@ -25,9 +24,6 @@ try {
     /**
      * Handle the request
      */
-=======
-try {
-
     // Регистрация автозагрузчика
     $loader = new \Phalcon\Loader();
     $loader->registerDirs(array(
@@ -56,17 +52,10 @@ try {
     });
 
     // Обработка запроса
->>>>>>> 02fe9974d50864acea27dfc9c9450c9e72a83eb0
     $application = new \Phalcon\Mvc\Application($di);
 
     echo $application->handle()->getContent();
 
-<<<<<<< HEAD
-} catch (\Exception $e) {
-    echo $e->getMessage();
-}
-=======
 } catch (Exception $e) {
     echo "PhalconException: ", $e->getMessage();
 }
->>>>>>> 02fe9974d50864acea27dfc9c9450c9e72a83eb0
