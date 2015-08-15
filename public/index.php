@@ -24,10 +24,10 @@ try {
     /**
      * Handle the request
      */
+
     // Регистрация автозагрузчика
     $loader = new \Phalcon\Loader();
     $loader->registerDirs(array(
-        '../app/controllers/',
         '../app/models/'
     ))->register();
 
@@ -44,17 +44,49 @@ try {
         ));
     });
 
-    // Настраиваем компонент View
-    $di->set('view', function () {
-        $view = new \Phalcon\Mvc\View();
-        $view->setViewsDir('../app/views/');
-        return $view;
+    $app = new Phalcon\Mvc\Micro($di);
+
+    // Получение всех gjльзователей
+    $app->get('/api/users', function () use ($app) {
+
+        $phql = "SELECT * FROM Users ORDER BY name";
+        $robots = $app->modelsManager->executeQuery($phql);
+
+        $data = array();
+        foreach ($robots as $robot) {
+            $data[] = array(
+                'id'   => $robot->id,
+                'name' => $robot->name
+            );
+        }
+
+        echo json_encode($data);
     });
 
-    // Обработка запроса
-    $application = new \Phalcon\Mvc\Application($di);
+    // Поиск роботов, в названии которых содержится $name
+    $app->get('/api/users/search/{name}', function ($name) use ($app) {
 
-    echo $application->handle()->getContent();
+        $phql = "SELECT * FROM Users WHERE name LIKE :name: ORDER BY name";
+        $robots = $app->modelsManager->executeQuery(
+            $phql,
+            array(
+                'name' => '%' . $name . '%'
+            )
+        );
+
+        $data = array();
+        foreach ($robots as $robot) {
+            $data[] = array(
+                'id'   => $robot->id,
+                'name' => $robot->name
+            );
+        }
+
+        echo json_encode($data);
+    });
+
+
+    echo $app->handle();
 
 } catch (Exception $e) {
     echo "PhalconException: ", $e->getMessage();

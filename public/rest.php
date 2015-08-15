@@ -6,7 +6,7 @@ $app = new Micro();
 
 // Retrieves all robots
 $app->get('/api/robots', function () {
-
+//echo 111;
 });
 
 // Searches for robots with $name in their name
@@ -34,4 +34,4 @@ $app->delete('/api/robots/{id:[0-9]+}', function () {
 
 });
 
-$app->handle();
+//$app->handle()->getContent();
