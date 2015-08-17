@@ -46,7 +46,7 @@ try {
 
     $app = new Phalcon\Mvc\Micro($di);
 
-    // Получение всех gjльзователей
+    // Получение всех пользователей
     $app->get('/api/users', function () use ($app) {
 
         $phql = "SELECT * FROM Users ORDER BY name";
@@ -63,7 +63,7 @@ try {
         echo json_encode($data);
     });
 
-    // Поиск роботов, в названии которых содержится $name
+    // Поиск пользователей, в названии которых содержится $name
     $app->get('/api/users/search/{name}', function ($name) use ($app) {
 
         $phql = "SELECT * FROM Users WHERE name LIKE :name: ORDER BY name";
@@ -85,6 +85,35 @@ try {
         echo json_encode($data);
     });
 
+
+    // Получение пользователя по ключу
+    $app->get('/api/users/{id:[0-9]+}', function ($id) use ($app) {
+
+        $phql = "SELECT * FROM Users WHERE id = :id:";
+        $robot = $app->modelsManager->executeQuery($phql, array(
+            'id' => $id
+        ))->getFirst();
+
+        // Create a response
+        $response = new Phalcon\Http\Response();
+        $response->setRawHeader("HTTP/1.1 200 OK");
+
+        if ($robot == false) {
+            $data = json_encode(['status'=> 'NOT-FOUND']);
+        } else {
+            $data = json_encode(
+                array(
+                    'status' => 'FOUND',
+                    'data'   => array(
+                        'id'   => $robot->id,
+                        'name' => $robot->name
+                    )
+                )
+            );
+        }
+
+        echo $data;
+    });
 
     echo $app->handle();
 
