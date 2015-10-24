@@ -1,0 +1,12 @@
+{
+    "name": "nabludai_backend",
+    "require": {
+        "firebase/php-jwt": "^3.0"
+    },
+    "authors": [
+        {
+            "name": "NickTaporuk",
+            "email": "nictaporuk@yandex.ru"
+        }
+    ]
+}
