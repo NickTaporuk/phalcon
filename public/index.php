@@ -3,7 +3,7 @@
 error_reporting(E_ALL);
 
 define('APP_PATH', realpath('..'));
-
+require_once '../vendor/autoload.php';
 try {
 
     /**
@@ -49,6 +49,27 @@ try {
     // Получение всех пользователей
     $app->get('/api/users', function () use ($app) {
 
+        // create token
+//        new \Firebase\JWT\JWT;
+        $key = "example_key";
+        $token = array(
+            "iss" => "http://example.org",
+            "aud" => "http://example.com",
+            "iat" => 1356999524,
+            "nbf" => 1357000000
+        );
+
+        /**
+         * IMPORTANT:
+         * You must specify supported algorithms for your application. See
+         * https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40
+         * for a list of spec-compliant algorithms.
+         */
+        $jwt = \Firebase\JWT\JWT::encode($token, $key);
+        $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
+
+        print_r($decoded);
+        //
         $phql = "SELECT * FROM Users ORDER BY name";
         $robots = $app->modelsManager->executeQuery($phql);
 
