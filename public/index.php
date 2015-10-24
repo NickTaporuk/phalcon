@@ -62,8 +62,38 @@ try {
 
         echo json_encode($data);
     });
+    // Получение всех пользователей
+    $app->get('/data/users', function () use ($app) {
 
-    // Поиск пользователей, в названии которых содержится $name
+        $phql = "SELECT * FROM Users ORDER BY name";
+        $robots = $app->modelsManager->executeQuery($phql);
+
+        $data = array();
+        foreach ($robots as $robot) {
+            $data[] = array(
+                'id'   => $robot->id,
+                'name' => $robot->name
+            );
+        }
+
+        echo json_encode($data);
+    });
+    // Получение всех пользователей
+    $app->get('/data/info', function () use ($app) {
+
+        $phql = "SELECT * FROM Users ORDER BY name";
+        $robots = $app->modelsManager->executeQuery($phql);
+
+        $data = array();
+        foreach ($robots as $robot) {
+            $data[] = array(
+                'id'   => $robot->id,
+                'name' => $robot->name
+            );
+        }
+
+        echo json_encode($data);
+    });    // Поиск пользователей, в названии которых содержится $name
     $app->get('/api/users/search/{name}', function ($name) use ($app) {
 
         $phql = "SELECT * FROM Users WHERE name LIKE :name: ORDER BY name";
@@ -115,6 +145,12 @@ try {
         echo $data;
     });
 
+
+    // Получение пользователя по ключу
+    $app->get('/info', function () use ($app) {
+
+        echo true;
+    });
     echo $app->handle();
 
 } catch (Exception $e) {
